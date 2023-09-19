@@ -1,0 +1,34 @@
+
+<div  class="d-flex justify-content-center">
+  <div class="todo-list">
+    <div class="d-flex justify-content-center">
+      <h1>Todo list: </h1>
+    </div>
+
+    <!-- Todo Item Card -->
+    <mat-card *ngFor="let item of todoItems" class="todo-item">
+
+      <!-- Todo Item Title -->
+      <div class="d-flex justify-content-center">
+      <mat-card-title>
+        {{ item.name }}
+      </mat-card-title>
+      </div>
+
+      <!-- Todo Item Description -->
+      <mat-card-content>
+        <p>{{ item.description }}</p>
+        <p><strong>Due:</strong> {{ item.dueDate }}</p>
+        <p><strong>Status:</strong> {{ item.status }}</p>
+      </mat-card-content>
+
+      <!-- You can add action buttons here if you want -->
+       <mat-card-actions>
+        <button mat-button>EDIT</button>
+        <button mat-button>DELETE</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+
+</div>

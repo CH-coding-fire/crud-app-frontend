@@ -1,0 +1,13 @@
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; // Space between cards
+
+.todo-item {
+  margin: 0.5rem 0;
+}
+
+  .example-container {
+    margin: 1rem 0;
+  }
+}

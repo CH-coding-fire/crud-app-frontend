@@ -1,0 +1,44 @@
+<div class="outer-container">
+
+  <form [formGroup]="todoForm" >
+
+    <!-- Inner Container for all fields -->
+    <div class="container">
+
+      <!-- Name Input -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" id="name" formControlName="name">
+      </mat-form-field>
+
+      <!-- Description Textarea -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput id="description" formControlName="description"></textarea>
+      </mat-form-field>
+
+      <!-- Due Date Input -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Due Date</mat-label>
+        <input matInput type="date" id="dueDate" formControlName="dueDate">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select id="status" formControlName="status">
+          <mat-option [value]="taskStatus.NotStarted">{{taskStatus.NotStarted}}</mat-option>
+          <mat-option [value]=taskStatus.InProgress>{{taskStatus.InProgress}}</mat-option>
+          <mat-option [value]="taskStatus.Completed">{{taskStatus.Completed}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Submit Button -->
+      <div>
+        <button (click)="onSubmit()" mat-raised-button type="submit" [disabled]="!todoForm.valid" color="primary">Submit</button>
+      </div>
+
+    </div> <!-- End of Inner Container -->
+
+  </form>
+
+</div>
