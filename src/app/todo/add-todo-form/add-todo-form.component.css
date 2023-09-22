@@ -1,9 +1,4 @@
-.outer-container {
-  display: flex;
-  justify-content: center;
-  align-items: center; /* This will vertically center the inner div */
 
-}
 
 .container {
   display: flex;
@@ -11,9 +6,6 @@
   align-items: center; /* This will center all children horizontally */
   justify-content: center; /* This will center them vertically */
   padding: 20px;
-  border: 1px solid #e1e1e1;
-  border-radius: 8px;
-  width: 80%;
 }
 
 .full-width {
@@ -31,4 +23,8 @@
   .container {
     max-width: 75%;
   }
+}
+
+.cdk-overlay-container {
+  z-index: 2000 !important; /* or a value higher than the modal's z-index */
 }

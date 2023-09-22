@@ -13,6 +13,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
 import { TodoToolbarComponent } from './components/todo-toolbar/todo-toolbar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {NgbActiveModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -32,6 +34,9 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     MatInputModule,
     MatCardModule,
     MatToolbarModule,
+    NgbModule,
+    MatDialogModule,
+
 
   ]
 })

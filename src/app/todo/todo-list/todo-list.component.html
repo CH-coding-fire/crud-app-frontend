@@ -6,7 +6,7 @@
     </div>
 
     <!-- Todo Item Card -->
-    <mat-card *ngFor="let item of todoItems" class="todo-item">
+    <mat-card *ngFor="let item of todoItems$ | async" class="todo-item">
 
       <!-- Todo Item Title -->
       <div class="d-flex justify-content-center">
@@ -24,10 +24,12 @@
 
       <!-- You can add action buttons here if you want -->
        <mat-card-actions>
-        <button mat-button>EDIT</button>
-        <button mat-button>DELETE</button>
+        <button mat-button (click)="onEdit(item)">EDIT</button>
+        <button mat-button (click)="onDelete()">DELETE</button>
       </mat-card-actions>
     </mat-card>
+
+
 
   </div>
 

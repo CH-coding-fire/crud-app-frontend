@@ -1,44 +1,43 @@
-<div class="outer-container">
+<form [formGroup]="todoForm">
 
-  <form [formGroup]="todoForm" >
+  <!-- Inner Container for all fields -->
+  <div class="container">
+    <h1>{{ isEditMode ? 'Edit todo' : 'Add todo' }}</h1>
 
-    <!-- Inner Container for all fields -->
-    <div class="container">
+    <!-- Name Input -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput type="text" id="name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput id="description" formControlName="description"></textarea>
+    </mat-form-field>
 
-      <!-- Name Input -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Name</mat-label>
-        <input matInput type="text" id="name" formControlName="name">
-      </mat-form-field>
+    <!-- Due Date Input -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Due Date</mat-label>
+      <input matInput type="date" id="dueDate" formControlName="dueDate">
+    </mat-form-field>
 
-      <!-- Description Textarea -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Description</mat-label>
-        <textarea matInput id="description" formControlName="description"></textarea>
-      </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Status</mat-label>
+      <mat-select id="status" formControlName="status">
+        <mat-option [value]="taskStatus.NotStarted">{{taskStatus.NotStarted}}</mat-option>
+        <mat-option [value]=taskStatus.InProgress>{{taskStatus.InProgress}}</mat-option>
+        <mat-option [value]="taskStatus.Completed">{{taskStatus.Completed}}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <!-- Due Date Input -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Due Date</mat-label>
-        <input matInput type="date" id="dueDate" formControlName="dueDate">
-      </mat-form-field>
+    <!-- Submit Button -->
+    <button
+      mat-raised-button
+      (click)="onSubmit()"
+      [disabled]="!todoForm.valid"
+      color="primary"
+    >{{ isEditMode ? 'Edit' : 'Create' }}</button>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Status</mat-label>
-        <mat-select id="status" formControlName="status">
-          <mat-option [value]="taskStatus.NotStarted">{{taskStatus.NotStarted}}</mat-option>
-          <mat-option [value]=taskStatus.InProgress>{{taskStatus.InProgress}}</mat-option>
-          <mat-option [value]="taskStatus.Completed">{{taskStatus.Completed}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+  </div> <!-- End of Inner Container -->
 
-      <!-- Submit Button -->
-      <div>
-        <button (click)="onSubmit()" mat-raised-button type="submit" [disabled]="!todoForm.valid" color="primary">Submit</button>
-      </div>
+</form>
 
-    </div> <!-- End of Inner Container -->
-
-  </form>
-
-</div>
