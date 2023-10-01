@@ -1,3 +1,9 @@
 .spacer {
   flex: 1 1 auto;
 }
+
+.toggle-group-container mat-label {
+  display: block;
+  margin-bottom: 5px; /* Adjust as needed */
+  margin-top: 5px;
+}

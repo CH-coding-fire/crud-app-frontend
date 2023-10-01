@@ -10,6 +10,10 @@ const routes: Routes = [
     path: 'todos',
     loadChildren: () => import('./todo/todo.module').then(m => m.TodoModule)
   },
+  {
+    path: 'team',
+    loadChildren: () => import('./team/team.module').then(m => m.TeamModule)
+  },
 ];
 
 @NgModule({

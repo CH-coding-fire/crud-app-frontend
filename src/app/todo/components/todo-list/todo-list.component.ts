@@ -1,9 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {TodoItem} from "../interfaces/todo-item";
-import {TodoItemStoreService} from "../services/todo-item-store.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {TodoItem} from "../../interfaces/todo-item";
+import {TodoItemStoreService} from "../../services/todo-item-store.service";
 import {Observable} from "rxjs";
-import {AddTodoFormComponent} from "../add-todo-form/add-todo-form.component";
 import {MatDialog} from "@angular/material/dialog";
+import {AddTodoFormComponent} from "../add-todo-form/add-todo-form.component";
+import {TaskStatus} from "../../enums/TaskStatus";
+import {FormControl} from "@angular/forms";
+import {TodoGroup} from "../../interfaces/todo-group";
 
 @Component({
   selector: 'app-todo-list',
@@ -11,15 +14,15 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./todo-list.component.css']
 })
 export class TodoListComponent implements OnInit {
-  todoItems$: Observable<TodoItem[]> | undefined;
+  @Input() filteredSortedTodoItems: TodoItem[] = []
+  @Input() todoGroup!: TodoGroup
+
 
   constructor(private todoItemStoreService: TodoItemStoreService,
-              public dialog: MatDialog,
-              )
+              public dialog: MatDialog,)
   {}
 
   ngOnInit(): void {
-    this.todoItems$ = this.todoItemStoreService.todoItems$
   }
 
   onEdit(todoItem: TodoItem) {
@@ -43,4 +46,5 @@ export class TodoListComponent implements OnInit {
   onDelete() {
 
   }
+
 }

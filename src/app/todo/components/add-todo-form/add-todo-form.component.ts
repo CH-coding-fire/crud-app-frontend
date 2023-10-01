@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {TodoItem} from "../interfaces/todo-item";
-import {TaskStatus} from "../enums/TaskStatus";
+import {TodoItem} from "../../interfaces/todo-item";
+import {TaskStatus} from "../../enums/TaskStatus";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import { v4 as uuidv4 } from 'uuid';
 

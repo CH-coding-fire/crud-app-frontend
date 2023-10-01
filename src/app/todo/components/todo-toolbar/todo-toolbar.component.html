@@ -1,14 +1,47 @@
-<mat-toolbar color="primary">
+<div class="m-5">
+  <div>
+    <mat-form-field>
+      <mat-label>Todo group</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let todoGroup of todoGroupSelection.value" [value]="todoGroup.id">
+          {{todoGroup.id}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <!-- Brand or Title (if needed) -->
-  <span>Todo-list</span>
+  </div>
+  <div class="toggle-group-container">
+    <mat-label>Status filter</mat-label>
+    <mat-button-toggle-group multiple [value]='todoStatus' (change)="onToggleStatus($event)">
+      <mat-button-toggle *ngFor="let status of Object.values(TaskStatus)" [value]="status">
+        {{status}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div class="toggle-group-container">
+    <mat-label>Tag filter</mat-label>
+    <mat-button-toggle-group multiple [value]='todoTag' (change)="onToggleTag($event)">
+      <mat-button-toggle *ngFor="let tag of Object.values(TaskTag)" [value]="tag">
+        {{tag}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
-  <!-- Spacer to push buttons to the right side -->
-  <span class="spacer"></span>
+  <div class="toggle-group-container">
+    <mat-label>Due date sorter</mat-label>
+    <mat-button-toggle-group [value]='dateSequenceSort' (change)="onToggleDateSequence($event)">
+      <mat-button-toggle *ngFor="let dateSort of Object.values(SortSequence)" [value]="dateSort">
+        {{dateSort}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
-  <!-- Buttons -->
-  <button mat-button (click)="onCreate()">Create</button>
-  <button mat-button (click)="onFilter()">Filter</button>
-  <button mat-button (click)="onSort()">Sort</button>
-
-</mat-toolbar>
+  <div class="toggle-group-container">
+    <mat-label>Priority sorter</mat-label>
+    <mat-button-toggle-group [value]='prioritySort' (change)="onTogglePriority($event)">
+      <mat-button-toggle *ngFor="let priority of Object.values(SortSequence)" [value]="priority">
+        {{priority}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</div>

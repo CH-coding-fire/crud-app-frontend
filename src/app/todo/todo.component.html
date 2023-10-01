@@ -1,2 +1,8 @@
-<app-todo-toolbar></app-todo-toolbar>
-<app-todo-list></app-todo-list>
+<div class='row'>
+  <div class="col-1">
+    <app-todo-toolbar (filteredSortedTodoItems)="onFilteredSortedTodoItems($event)"></app-todo-toolbar>
+  </div>
+  <div class="col-11">
+  <app-todo-list  [filteredSortedTodoItems]="filteredSortedTodoItems"></app-todo-list>
+  </div>
+</div>
