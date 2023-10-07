@@ -1,1 +1,38 @@
-<p>login works!</p>
+<form [formGroup]="loginForm">
+  <div class="d-flex flex-column justify-content-center p-4">
+    <h1>{{ 'Login' }}</h1>
+    <!-- teamName Input -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" id="username"
+             formControlName="username"
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput type="text" id="password"
+             formControlName="password"
+      >
+    </mat-form-field>
+
+    <!-- Submit Button -->
+    <button
+      mat-raised-button
+      (click)="onSubmit()"
+      [disabled]="!loginForm.valid"
+      color="primary"
+    >{{ 'Login' }}</button>
+    <div
+      routerLink="/auth/register"
+      style="color: blue;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer"
+    >
+      No account? Register here
+    </div>
+  </div>
+
+
+</form>

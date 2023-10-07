@@ -1,15 +1,31 @@
-<div class="m-5">
+
+<div class="p-2">
+  <div class="d-flex justify-content-center">
+    <h1>Toolbar: </h1>
+  </div>
   <div>
     <mat-form-field>
       <mat-label>Todo group</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let todoGroup of todoGroupSelection.value" [value]="todoGroup.id">
-          {{todoGroup.id}}
+      <mat-select
+        (selectionChange)="onSelectTodoGroup($event)"
+        [value] = "initialTodoGroup"
+      >
+
+        <mat-option *ngFor="let todoGroup of (getTodoGroup$ | async)" [value]="{todoGroupId:todoGroup.id, todoGroupName:todoGroup.name}">
+          {{todoGroup.name}}(TeamId: {{todoGroup.teamId}})
         </mat-option>
       </mat-select>
     </mat-form-field>
-
   </div>
+  <button
+    *ngIf="currentTodoGroupName"
+    (click)="onCreateTodoItem()"
+          mat-raised-button
+          color="primary"
+          class="p-3"
+  >
+    Create new todo for <strong>{{currentTodoGroupName}}</strong>
+  </button>
   <div class="toggle-group-container">
     <mat-label>Status filter</mat-label>
     <mat-button-toggle-group multiple [value]='todoStatus' (change)="onToggleStatus($event)">

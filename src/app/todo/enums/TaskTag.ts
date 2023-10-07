@@ -1,5 +1,5 @@
 export enum TaskTag {
-  work = 'work',
+  work = 'Work',
   errend = 'Errand',
   hobby = 'Hobby'
 }

@@ -18,6 +18,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { FilterByConditionPipe } from './pipes/filter-by-condition.pipe';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import { AddTodoGroupFormComponent } from './components/add-todo-group-form/add-todo-group-form.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     TodoListComponent,
     TodoComponent,
     TodoToolbarComponent,
-    FilterByConditionPipe
+    FilterByConditionPipe,
+    AddTodoGroupFormComponent
   ],
     imports: [
         CommonModule,
@@ -39,11 +41,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
         MatCardModule,
         MatToolbarModule,
         NgbModule,
-        MatDialogModule,
         MatCheckboxModule,
         MatButtonToggleModule,
-
-
     ]
 })
 export class TodoModule { }

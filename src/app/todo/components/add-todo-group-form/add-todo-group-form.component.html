@@ -1,0 +1,38 @@
+<form [formGroup]="todoGroupForm">
+  <div class="d-flex flex-column m-1 p-4">
+    <div class="d-flex justify-content-center">
+      <h1>Create todo group</h1>
+    </div>
+    <p>As an admin, you can create todo group for teams by below selections</p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Todo group name</mat-label>
+      <input matInput type="text" id="name" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Choose the teams to create todo group</mat-label>
+      <mat-select
+        formControlName="teamId"
+      >
+        <mat-option
+          *ngFor="let team of teams$ | async "
+          [value]="team.id"
+        >
+          {{team.teamName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Submit Button -->
+    <button
+      mat-raised-button
+      (click)="onSubmit()"
+      [disabled]="!todoGroupForm.valid"
+      color="primary"
+    >Create</button>
+
+  </div> <!-- End of Inner Container -->
+
+</form>
+

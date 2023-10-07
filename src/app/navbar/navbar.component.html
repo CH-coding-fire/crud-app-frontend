@@ -1,0 +1,56 @@
+<p>
+  <mat-toolbar color="primary" class="d-flex flex-row justify-content-between">
+    <div>
+      <span>Todo app</span>
+      <span class="example-spacer"></span>
+    </div>
+
+    <!-- Use the .toolbar-buttons class here -->
+    <div class="d-flex flex-row align-items-center toolbar-buttons">
+      <ng-container *ngIf="(getUsername$ | async)">
+        <button *ngIf="(getRole$ | async) === 'Admin'"
+                mat-raised-button routerLink="/todos" class="m-2">
+          <mat-icon>visibility</mat-icon>
+          See existing todos groups
+        </button>
+
+        <button mat-raised-button (click)="onCreateTodoGroup()" class="m-2">
+          <mat-icon>create</mat-icon>
+          Create todos groups
+        </button>
+
+        <button mat-raised-button
+                *ngIf="!(getUsername$ | async); else loggedInTemplate" routerLink="/auth/login"
+                class="m-2"
+        >
+          <mat-icon>login</mat-icon>
+          Login/Register
+        </button>
+
+      </ng-container>
+    </div>
+
+  </mat-toolbar>
+</p>
+
+
+<!-- Template to use when user is authenticated -->
+<ng-template #loggedInTemplate>
+  <button mat-raised-button (click)="onLogout()" class="m-2">
+    <mat-icon>exit_to_app</mat-icon>
+    Logout
+  </button>
+  <div class="d-flex">
+    <div class="me-2">
+      <div>
+        Username: {{getUsername$ | async}}
+      </div>
+      <div>
+        Role: {{getRole$ | async}}
+      </div>
+    </div>
+    <div>
+      TeamId: {{getTeamId$ |async}}
+    </div>
+  </div>
+</ng-template>

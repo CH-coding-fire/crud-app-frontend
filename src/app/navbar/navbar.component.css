@@ -1,0 +1,13 @@
+/* Define styles that apply for all screen sizes */
+.toolbar-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Define styles that apply only when the screen width is below 768px */
+@media (max-width: 768px) {
+  .toolbar-buttons {
+    flex-direction: column;
+  }
+}

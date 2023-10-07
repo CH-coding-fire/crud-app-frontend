@@ -1,24 +1,27 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AddTodoFormComponent} from "../add-todo-form/add-todo-form.component";
 import {TodoItem} from "../../interfaces/todo-item";
 import {MatDialog} from "@angular/material/dialog";
-import {TodoItemStoreService} from "../../services/todo-item-store.service";
 import {TaskStatus} from "../../enums/TaskStatus";
 import {TaskTag} from "../../enums/TaskTag";
-import {map} from "rxjs";
+import {catchError, EMPTY, map, Observable, of, take, tap} from "rxjs";
 import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {SortSequence} from "../../enums/sort-sequence";
 import {SortingService} from "../../services/sorting.service";
-import {FormControl} from "@angular/forms";
 import {TodoGroup} from "../../interfaces/todo-group";
+import {TodoGroupService} from "../../services/todo-group.service";
+import {MatSelectChange} from "@angular/material/select";
+import {TodoItemService} from "../../services/todo-item.service";
+import {TodoItemStoreService} from "../../services/todo-item-store.service";
 
 @Component({
   selector: 'app-todo-toolbar',
   templateUrl: './todo-toolbar.component.html',
-  styleUrls: ['./todo-toolbar.compo' +
-  'nent.css']
+  styleUrls: ['./todo-toolbar.component.css']
 })
 export class TodoToolbarComponent implements OnInit {
+  @Output() todoGroup: EventEmitter<TodoGroup> = new EventEmitter<TodoGroup>()
+
   protected readonly TaskStatus = TaskStatus;
   protected readonly TaskTag = TaskTag;
   protected readonly Object = Object;
@@ -27,146 +30,79 @@ export class TodoToolbarComponent implements OnInit {
   todoTag:TaskTag[]=[...Object.values(TaskTag)]
   dateSequenceSort: SortSequence = SortSequence.None
   prioritySort: SortSequence = SortSequence.None
+  getTodoGroup$: Observable<TodoGroup[]> = this.todoGroupService.getTodoGroup()
 
-  @Output() filteredSortedTodoItems: EventEmitter<TodoItem[]> = new EventEmitter<TodoItem[]>()
-  @Output() todoGroup: EventEmitter<TodoGroup> = new EventEmitter<TodoGroup>()
-
-  todoGroupsDummy: TodoGroup[] = [
-    {
-      id: "group_001",
-      todoGroup: [
-        {
-          id: "task_001",
-          name: "Finish Quarterly Report",
-          description: "Complete the quarterly financial report for Q3.",
-          dueDate: new Date('2023-10-15'),
-          status: TaskStatus.NotStarted,
-          tag: TaskTag.work,
-          priority: 1
-        },
-        {
-          id: "task_002",
-          name: "Buy Groceries",
-          description: "Buy milk, bread, and vegetables for the week.",
-          dueDate: new Date('2023-09-27'),
-          status: TaskStatus.NotStarted,
-          tag: TaskTag.errend,
-          priority: 2
-        }
-      ],
-      teamId: "team_A"
-    },
-    {
-      id: "group_002",
-      todoGroup: [
-        {
-          id: "task_003",
-          name: "Weekly Team Meeting",
-          description: "Discuss the project updates and next steps.",
-          dueDate: new Date('2023-09-29'),
-          status: TaskStatus.InProgress,
-          tag: TaskTag.work,
-          priority: 2
-        }
-      ],
-      teamId: "team_B"
-    },
-    {
-      id: "group_003",
-      todoGroup: [
-        {
-          id: "task_004",
-          name: "Painting Session",
-          description: "Work on the landscape painting for 2 hours.",
-          dueDate: new Date('2023-10-05'),
-          status: TaskStatus.NotStarted,
-          tag: TaskTag.hobby,
-          priority: 3
-        },
-        {
-          id: "task_005",
-          name: "Visit the Post Office",
-          description: "Drop off packages and collect mail.",
-          dueDate: new Date('2023-09-28'),
-          status: TaskStatus.Completed,
-          tag: TaskTag.errend,
-          priority: 5
-        }
-      ],
-      teamId: "team_C"
-    }
-  ];
-
-
-  todoGroupSelection = new FormControl<TodoGroup[]>([])
-
+  private currentTodoGroupId: number  = 0
+  public currentTodoGroupName: string | null = null
+  public initialTodoGroup: TodoGroup|null = null;
   constructor(public dialog: MatDialog,
+              private todoGroupService: TodoGroupService,
+              private todoItemService: TodoItemService,
               private todoItemStoreService: TodoItemStoreService,
-              private sortingService: SortingService
   ) {}
   ngOnInit() {
-    // Step 1: API call the first todoGroup that the user can access...
-    // Step 2: Input into the emitFilteredAndSortedItem function
-    // Step 3: output the result of filteredItem and information of the todoGroup, as a object
-
-    this.emitFilteredAndSortedItem("1")
-    this.todoGroupSelection.valueChanges.subscribe((todoGroupId:any)=>{
-      //apI call
-      this.todoGroup.emit({id:"group_00001", todoGroup: [], teamId: "teamZ"})
-
-      this.emitFilteredAndSortedItem(todoGroupId)
-    })
-  }
-  emitFilteredAndSortedItem(todoGroupId?:string) {
-    // api call by todoGroupId and user authentication
-    //
-    this.todoItemStoreService.todoItems$
-      .pipe(
-        map(todoItems => todoItems.filter(item =>
-            this.todoStatus.includes(item.status) &&
-            this.todoTag.includes(item.tag)
-          )
-        ),
-        map((filteredItems: TodoItem[]) => {
-          filteredItems = this.sortingService.sortByPriority(filteredItems, this.prioritySort)
-          filteredItems = this.sortingService.sortByDateSequence(filteredItems, this.dateSequenceSort)
-          return filteredItems;
-        })
-      )
-      .subscribe((filteredItems: TodoItem[]) => {
-        this.filteredSortedTodoItems.emit(filteredItems)
-        console.log("FILTERED_ITEMS", filteredItems);
-      });
-
-  }
-
-  onCreate() {
-    const dialogRef = this.dialog.open(AddTodoFormComponent, {
-      width: '500px',
-    });
-
-    dialogRef.afterClosed().subscribe((result: TodoItem) => {
-      if (result) {
-        console.log('The create dialog was closed', result);
-        //todo Api call
-        //todo Update UI
-        this.todoItemStoreService.addTodoItem(result)
+    this.getTodoGroup$ = this.todoGroupService.getTodoGroup()
+    this.getTodoGroup$.pipe(
+      take(1)  // Only take one emission to avoid memory leaks
+    ).subscribe((todoGroups) => {
+      if (todoGroups.length > 0) {
+        this.initFirstTodoGroup(todoGroups)
       }
     });
+  }
 
+  // ngAfterViewInit():void{
+  //   this.getTodoGroup$.pipe(
+  //     take(1)  // Only take one emission to avoid memory leaks
+  //   ).subscribe((todoGroups) => {
+  //     if (todoGroups.length > 0) {
+  //       this.initFirstTodoGroup(todoGroups)
+  //     }
+  //   });
+  // }
+
+  initFirstTodoGroup(todoGroups:TodoGroup[]){
+    this.initialTodoGroup = todoGroups[0];
+    console.log(this.initialTodoGroup)
+    const unfilteredTodoItems$: Observable<TodoItem[]> = this.todoGroupService.getTodoGroupById(todoGroups[0].id)
+      .pipe(
+        map(response => response.todoItems)
+      );
+    this.todoItemStoreService.setAndFilterTodoItems(
+      unfilteredTodoItems$,
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
   }
   onToggleStatus(status: MatButtonToggleChange){
     this.todoStatus = status.value
-    this.emitFilteredAndSortedItem()
+    this.todoItemStoreService.filterTodoItems(
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
   }
   onToggleTag(tags: MatButtonToggleChange) {
     this.todoTag = tags.value
-    this.emitFilteredAndSortedItem()
+    this.todoItemStoreService.filterTodoItems(
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
   }
   onToggleDateSequence(dateSequenceSort: MatButtonToggleChange) {
     this.prioritySort = SortSequence.None
     this.dateSequenceSort = dateSequenceSort.value
-    this.emitFilteredAndSortedItem()
+    this.todoItemStoreService.filterTodoItems(
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
   }
 
   protected readonly SortSequence = SortSequence;
@@ -174,6 +110,90 @@ export class TodoToolbarComponent implements OnInit {
   onTogglePriority(prioritySort: MatButtonToggleChange) {
     this.dateSequenceSort = SortSequence.None
     this.prioritySort = prioritySort.value
-    this.emitFilteredAndSortedItem()
+    this.todoItemStoreService.filterTodoItems(
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
   }
+
+  onSelectTodoGroup(todoGroupIdAndName: MatSelectChange) {
+    const {todoGroupId, todoGroupName} = todoGroupIdAndName.value
+    this.currentTodoGroupName = todoGroupName
+    this.currentTodoGroupId = todoGroupId
+
+    const unfilteredTodoItems$: Observable<TodoItem[]> = this.todoGroupService.getTodoGroupById(todoGroupId)
+      .pipe(
+        map(response => response.todoItems)
+      );
+    this.todoItemStoreService.setAndFilterTodoItems(
+      unfilteredTodoItems$,
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
+  }
+
+  onCreateTodoItem() {
+    const dialogRef = this.dialog.open(AddTodoFormComponent, {
+      data: { isEditMode:false},
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((result: TodoItem) => {
+      if (result) {
+        const unfilteredTodoItems$: Observable<TodoItem[]> = this.todoItemService.createTodoItem(result, this.currentTodoGroupId)
+          .pipe(
+            map(response => response.todoItems),
+            tap({
+              next: value => {
+                alert('Successfully added item!')
+              },
+            }),
+            catchError(error => {
+              alert(error);
+              return EMPTY; // does not emit any items to the subscriber and immediately emits a complete notification
+            })
+          );
+        this.todoItemStoreService.setAndFilterTodoItems(
+          unfilteredTodoItems$,
+          this.todoStatus,
+          this.todoTag,
+          this.dateSequenceSort,
+          this.prioritySort
+        )
+      }
+    });
+  }
+  onDeleteTodoItem(todoItemId:number):void{
+    const unfilteredTodoItems$: Observable<TodoItem[]> = this.todoItemService.deleteTodoItem(todoItemId)
+      .pipe(
+        map(response => response.todoItems)
+      );
+
+    this.todoItemStoreService.setAndFilterTodoItems(
+      unfilteredTodoItems$,
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
+  }
+  onEditTodoItem(todoItem: TodoItem) {
+    const unfilteredTodoItems$: Observable<TodoItem[]> = this.todoItemService.editTodoItem(todoItem)
+      .pipe(
+        map(response => response.todoItems)
+      );
+    this.todoItemStoreService.setAndFilterTodoItems(
+      unfilteredTodoItems$,
+      this.todoStatus,
+      this.todoTag,
+      this.dateSequenceSort,
+      this.prioritySort
+    )
+  }
+
+
 }

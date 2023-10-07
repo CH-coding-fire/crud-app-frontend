@@ -2,7 +2,7 @@
 
   <!-- Inner Container for all fields -->
   <div class="container">
-    <h1>{{ isEditMode ? 'Edit todo' : 'Add todo' }}</h1>
+    <h1>{{ data.isEditMode ? 'Edit todo' : 'Add todo' }}</h1>
 
     <!-- Name Input -->
     <mat-form-field appearance="outline" class="full-width">
@@ -29,13 +29,34 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tag</mat-label>
+      <mat-select id="tag" formControlName="tag">
+        <mat-option [value]="taskTag.work">{{taskTag.work}}</mat-option>
+        <mat-option [value]=taskTag.errend>{{taskTag.errend}}</mat-option>
+        <mat-option [value]="taskTag.hobby">{{taskTag.hobby}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Priority</mat-label>
+      <mat-select id="priority" formControlName="priority">
+        <mat-option [value]=1>{{1}}</mat-option>
+        <mat-option [value]=2>{{2}}</mat-option>
+        <mat-option [value]=3>{{3}}</mat-option>
+        <mat-option [value]=4>{{4}}</mat-option>
+        <mat-option [value]=5>{{5}}</mat-option>
+
+      </mat-select>
+    </mat-form-field>
+
     <!-- Submit Button -->
     <button
       mat-raised-button
       (click)="onSubmit()"
       [disabled]="!todoForm.valid"
       color="primary"
-    >{{ isEditMode ? 'Edit' : 'Create' }}</button>
+    >{{ data.isEditMode ? 'Edit' : 'Create' }}</button>
 
   </div> <!-- End of Inner Container -->
 

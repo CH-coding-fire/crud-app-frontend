@@ -10,10 +10,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {MatDialogModule} from "@angular/material/dialog";
+import {AuthInterceptor} from "./core/auth.interceptor";
+import { NavbarComponent } from './navbar/navbar.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavbarComponent
   ],
   imports: [
     CommonModule,
@@ -23,9 +31,20 @@ import {MatSelectModule} from "@angular/material/select";
     NgbModule,
     MatAutocompleteModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    HttpClientModule,
+    MatDialogModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

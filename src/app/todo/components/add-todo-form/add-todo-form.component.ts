@@ -4,30 +4,37 @@ import {TodoItem} from "../../interfaces/todo-item";
 import {TaskStatus} from "../../enums/TaskStatus";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import { v4 as uuidv4 } from 'uuid';
+import {TaskTag} from "../../enums/TaskTag";
 
 @Component({
   selector: 'app-add-todo-form',
   templateUrl: './add-todo-form.component.html',
   styleUrls: ['./add-todo-form.component.css']
 })
-export class AddTodoFormComponent implements OnInit{
+export class
+AddTodoFormComponent implements OnInit{
 
   todoForm: FormGroup = new FormGroup({});
   taskStatus = TaskStatus;
-  isEditMode:boolean = false;
+  taskTag = TaskTag;
+
+
 
   constructor(private fb: FormBuilder,
               public dialogRef: MatDialogRef<AddTodoFormComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: TodoItem,) {}
+              @Inject(MAT_DIALOG_DATA) public data: { todoItem?: TodoItem, isEditMode:boolean },
+              ) {}
 
   ngOnInit(): void {
-    console.log(this.data)
+    const todoItem = this.data.todoItem
     this.todoForm = this.fb.group({
-      id: [uuidv4()],
-      name: [this.data?.name ?? '', Validators.required],
-      description: [this.data?.description ?? ''],
-      dueDate: [this.data?.dueDate ?? '', Validators.required],
-      status: [this.data?.status ?? '', Validators.required]
+      id: [todoItem?.id ?? '',],
+      name: [todoItem?.name ?? '', Validators.required],
+      description: [todoItem?.description ?? ''],
+      dueDate: [todoItem?.dueDate ?? '', Validators.required],
+      status: [todoItem?.status ?? '', Validators.required],
+      tag: [todoItem?.tag ?? '', Validators.required],
+      priority: [todoItem?.priority ?? '', Validators.required],
     });
   }
 
@@ -35,5 +42,4 @@ export class AddTodoFormComponent implements OnInit{
     this.dialogRef.close( this.todoForm.value)
   }
 
-  protected readonly onsubmit = onsubmit;
 }

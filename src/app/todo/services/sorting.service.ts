@@ -12,9 +12,17 @@ export class SortingService {
   sortByDateSequence(filteredItems: TodoItem[], sequence: SortSequence): TodoItem[] {
     switch (sequence) {
       case SortSequence.Ascending:
-        return filteredItems.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+        return filteredItems.sort((a, b) => {
+          const dateObjA:number = new Date(a.dueDate).getTime()
+          const dateObjB:number = new Date(b.dueDate).getTime()
+          return dateObjA - dateObjB
+        });
       case SortSequence.Descending:
-        return filteredItems.sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime());
+        return filteredItems.sort((a, b) => {
+          const dateObjA:number = new Date(a.dueDate).getTime()
+          const dateObjB:number = new Date(b.dueDate).getTime()
+          return dateObjB - dateObjA
+        });
       case SortSequence.None:
       default:
         return filteredItems;

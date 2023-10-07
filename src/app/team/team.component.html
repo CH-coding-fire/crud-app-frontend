@@ -1,1 +1,21 @@
-<p>team works!</p>
+<button (click)="onCreateTeam()">add team</button>
+
+
+
+<h4>Team selection</h4>
+<mat-form-field>
+  <mat-label>Team name</mat-label>
+  <mat-select
+    (selectionChange)="onSelectTeam($event)"
+  >
+    <mat-option
+      *ngFor="let team of teams$ | async "
+      [value]="team.id"
+    >
+      {{team.teamName}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<h4>team member</h4>
+<h4>todo list</h4>

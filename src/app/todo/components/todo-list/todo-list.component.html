@@ -1,13 +1,14 @@
 
-<div  class="d-flex justify-content-center">
-  <div class="todo-list">
+<div  class="d-flex flex-column justify-content-center p-2">
     <div class="d-flex justify-content-center">
       <h1>Todo list: </h1>
     </div>
 
     <!-- Todo Item Card -->
-    <mat-card *ngFor="let item of filteredSortedTodoItems" class="todo-item">
 
+  <ng-container *ngIf="todoItems$ | async as todoItems">
+    <ng-container *ngIf="todoItems.length>0; else noItems">
+    <mat-card *ngFor="let item of (todoItems$ | async)" class="my-3 border p-3">
       <!-- Todo Item Title -->
       <div class="d-flex justify-content-center">
       <mat-card-title>
@@ -17,24 +18,22 @@
 
       <!-- Todo Item Description -->
       <mat-card-content>
-        <p>{{ item.description }}</p>
+        <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Due:</strong> {{ item.dueDate | date:'yyyy-MM-dd, HH:mm'  }}</p>
         <p><strong>Status:</strong> {{ item.status }}</p>
         <p><strong>Tag:</strong> {{ item.tag }}</p>
         <p><strong>Priority:</strong> {{ item.priority }}</p>
-
-
       </mat-card-content>
-
       <!-- You can add action buttons here if you want -->
        <mat-card-actions>
-        <button mat-button (click)="onEdit(item)">EDIT</button>
-        <button mat-button (click)="onDelete()">DELETE</button>
+        <button mat-stroked-button class="mx-1" (click)="onEdit(item)">EDIT</button>
+        <button mat-stroked-button (click)="onDelete(item.id )">DELETE</button>
       </mat-card-actions>
     </mat-card>
+    </ng-container>
+  </ng-container>
 
-
-
-  </div>
-
+  <ng-template #noItems>
+    <div class="fs-3">There is no todo items, click to add one...</div>
+  </ng-template>
 </div>

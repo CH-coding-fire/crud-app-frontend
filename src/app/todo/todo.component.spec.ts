@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TodoComponent } from './todo.component';
+import {TodoToolbarComponent} from "./components/todo-toolbar/todo-toolbar.component";
+import {TodoListComponent} from "./components/todo-list/todo-list.component";
 
 describe('TodoComponent', () => {
   let component: TodoComponent;
@@ -8,7 +10,10 @@ describe('TodoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TodoComponent]
+      declarations: [TodoComponent,
+        TodoToolbarComponent,
+        TodoListComponent,
+      ]
     });
     fixture = TestBed.createComponent(TodoComponent);
     component = fixture.componentInstance;
