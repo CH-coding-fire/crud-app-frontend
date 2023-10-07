@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/todos']);
       },
       (error: HttpErrorResponse) => {
-        alert("Username or password is wrong, please try again")
+        alert("Login fail")
         console.error("Login fail", error);
       }
     )
